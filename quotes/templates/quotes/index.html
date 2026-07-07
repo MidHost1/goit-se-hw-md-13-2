@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quotes to Scrape</title>
+</head>
+<body>
+
+    <!-- Навігація -->
+    <nav>
+        {% if user.is_authenticated %}
+            <p>Welcome, {{ user.username }}! | 
+               <a href="{% url 'quotes:add_author' %}">Add Author</a> | 
+               <a href="{% url 'quotes:add_quote' %}">Add Quote</a> | 
+               <a href="{% url 'quotes:logout' %}">Logout</a>
+            </p>
+        {% else %}
+            <a href="{% url 'quotes:login' %}">Login</a> | 
+            <a href="{% url 'quotes:register' %}">Register</a>
+        {% endif %}
+    </nav>
+
+    <h1>My Quotes</h1>
+
+    <!-- Список цитат -->
+    {% for quote in quotes %}
+        <div>
+            <p>{{ quote.quote }}</p>
+            <p>
+                <strong>Author:</strong> 
+                <a href="{% url 'quotes:author_detail' quote.author.fullname %}">
+                    {{ quote.author.fullname }}
+                </a>
+            </p>
+            <p><strong>Tags:</strong> {{ quote.tags|join:", " }}</p>
+            <hr>
+        </div>
+    {% endfor %}
+
+</body>
+</html>

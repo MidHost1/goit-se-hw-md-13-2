@@ -1,0 +1,5 @@
+<h2>{{ author.fullname }}</h2>
+<p>Born: {{ author.born_date }}</p>
+<p>Location: {{ author.born_location }}</p>
+<p>{{ author.description }}</p>
+<a href="{% url 'quotes:index' %}">Back to quotes</a>
