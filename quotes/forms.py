@@ -4,6 +4,8 @@ from .documents import Author, Quote
 
 
 class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ('email',)
 
