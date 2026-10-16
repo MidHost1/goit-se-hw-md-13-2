@@ -11,6 +11,8 @@ from .forms import AuthorForm, QuoteForm
 from django.http import Http404
 from mongoengine.errors import NotUniqueError
 
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.core.cache import cache
 from django.contrib import messages
 from django.contrib.auth.views import PasswordResetView        # нове
 from django.contrib.messages.views import SuccessMessageMixin  # нове
@@ -121,3 +123,16 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     subject_template_name = 'quotes/password_reset_subject.txt'
     success_url = reverse_lazy('quotes:password_reset_done')
     success_message = "An email with instructions to reset your password has been sent to %(email)s."
+
+
+class ResetPasswordConfirmView(SuccessMessageMixin, PasswordResetConfirmView):
+    template_name = 'quotes/password_reset_confirm.html'
+    success_url = reverse_lazy('quotes:password_reset_complete')
+    success_message = "Your password has been successfully reset."
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Очищаємо кеш Redis для цього користувача після зміни пароля
+        user = form.user
+        cache.delete(f"user_cache_{user.pk}")
+        return response
